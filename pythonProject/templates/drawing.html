@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exoplanet Drawing</title>
+    <style>
+        html, body {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            align-items: center; /* Центрирование по вертикали */
+            justify-content: center; /* Центрирование по горизонтали */
+        }
+        #drawCanvas {
+            width: 80vw; /* 80% от ширины окна */
+            height: 80vh; /* 80% от высоты окна */
+            border: 1px solid black;
+            display: block;
+        }
+        .tools {
+            text-align: center;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="drawCanvas"></canvas>
+    <div class="tools">
+        <label for="colorPicker">Color:</label>
+        <input type="color" id="colorPicker" value="#000000">
+        <label for="brushSize">Brush Size:</label>
+        <input type="range" id="brushSize" min="1" max="20" value="5">
+        <label for="shapeSelector">Shape:</label>
+        <select id="shapeSelector">
+            <option value="brush">Brush</option>
+            <option value="eraser">Eraser</option>
+            <option value="circle">Circle</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="line">Line</option>
+        </select>
+        <label for="fillShape">Fill Shape:</label>
+        <input type="checkbox" id="fillShape">
+        <button id="clearCanvas">Clear Canvas</button>
+        <button id="undoAction">Undo</button>
+        <button id="saveCanvas">Save Drawing</button>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('drawCanvas');
+        const ctx = canvas.getContext('2d');
+
+        // Установка размеров холста
+        function resizeCanvas() {
+            canvas.width = canvas.clientWidth;
+            canvas.height = canvas.clientHeight;
+        }
+
+        window.addEventListener('resize', resizeCanvas);
+        resizeCanvas(); // Вызов функции для установки размеров при загрузке
+
+        let painting = false;
+        let startX, startY;
+        let currentShape = 'brush';
+        let history = [];
+        let fillShape = false;
+
+        function saveState() {
+            history.push(canvas.toDataURL());
+        }
+
+        function undo() {
+            if (history.length > 0) {
+                const previousState = history.pop();
+                const img = new Image();
+                img.src = previousState;
+                img.onload = () => {
+                    ctx.clearRect(0, 0, canvas.width, canvas.height);
+                    ctx.drawImage(img, 0, 0);
+                };
+            }
+        }
+
+        ctx.strokeStyle = document.getElementById('colorPicker').value;
+        ctx.lineWidth = document.getElementById('brushSize').value;
+        ctx.lineCap = 'round';
+
+        function startPosition(e) {
+            painting = true;
+            const mousePos = getMousePos(canvas, e);
+            startX = mousePos.x;
+            startY = mousePos.y;
+            if (currentShape === 'brush' || currentShape === 'eraser') {
+                saveState();
+                draw(e);
+            }
+        }
+
+        function endPosition(e) {
+            if (!painting) return;
+            painting = false;
+            if (currentShape === 'circle' || currentShape === 'rectangle' || currentShape === 'line') {
+                saveState();
+                drawFinalShape(e);
+            }
+            ctx.beginPath();
+        }
+
+        function draw(e) {
+            if (!painting) return;
+            const mousePos = getMousePos(canvas, e);
+            ctx.strokeStyle = currentShape === 'eraser' ? '#FFFFFF' : document.getElementById('colorPicker').value;
+            ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.stroke();
+            ctx.beginPath();
+            ctx.moveTo(mousePos.x, mousePos.y);
+        }
+
+        function getMousePos(canvas, evt) {
+            const rect = canvas.getBoundingClientRect();
+            return {
+                x: evt.clientX - rect.left,
+                y: evt.clientY - rect.top
+            };
+        }
+
+        function drawPreview(e) {
+            // Рисуем предварительный вид фигуры
+            const mousePos = getMousePos(canvas, e);
+            // Рисуем фигуру на отдельном слое
+            const prevLineWidth = ctx.lineWidth;
+            const prevStrokeStyle = ctx.strokeStyle;
+            ctx.lineWidth = document.getElementById('brushSize').value;
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
+
+            // Отрисовка предыдущих состояний
+            const img = new Image();
+            img.src = history[history.length - 1]; // Получаем последнее сохранённое состояние
+            img.onload = () => {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+                ctx.drawImage(img, 0, 0); // Рисуем последнее состояние холста
+                // Рисуем фигуру
+                if (currentShape === 'circle') {
+                    drawCircle(mousePos);
+                } else if (currentShape === 'rectangle') {
+                    drawRectangle(mousePos);
+                } else if (currentShape === 'line') {
+                    drawLine(mousePos);
+                }
+            };
+            ctx.lineWidth = prevLineWidth;
+            ctx.strokeStyle = prevStrokeStyle;
+        }
+
+        function drawFinalShape(e) {
+            if (currentShape === 'circle') {
+                drawCircle(getMousePos(canvas, e));
+            } else if (currentShape === 'rectangle') {
+                drawRectangle(getMousePos(canvas, e));
+            } else if (currentShape === 'line') {
+                drawLine(getMousePos(canvas, e));
+            }
+        }
+
+        function drawCircle(mousePos) {
+            const radius = Math.sqrt(Math.pow(mousePos.x - startX, 2) + Math.pow(mousePos.y - startY, 2));
+            ctx.beginPath();
+            ctx.arc(startX, startY, radius, 0, Math.PI * 2);
+            if (fillShape) {
+                ctx.fillStyle = document.getElementById('colorPicker').value;
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+        }
+
+        function drawRectangle(mousePos) {
+            const width = mousePos.x - startX;
+            const height = mousePos.y - startY;
+            ctx.beginPath();
+            ctx.rect(startX, startY, width, height);
+            if (fillShape) {
+                ctx.fillStyle = document.getElementById('colorPicker').value;
+                ctx.fill();
+            } else {
+                ctx.stroke();
+            }
+        }
+
+        function drawLine(mousePos) {
+            ctx.beginPath();
+            ctx.moveTo(startX, startY);
+            ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.stroke();
+        }
+
+        canvas.addEventListener('mousedown', startPosition);
+        canvas.addEventListener('mouseup', endPosition);
+        canvas.addEventListener('mousemove', (e) => {
+            if (currentShape === 'brush' || currentShape === 'eraser') {
+                draw(e);
+            } else {
+                drawPreview(e);
+            }
+        });
+
+        document.getElementById('colorPicker').addEventListener('input', (e) => {
+            if (currentShape !== 'eraser') {
+                ctx.strokeStyle = e.target.value;
+            }
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (e) => {
+            ctx.lineWidth = e.target.value;
+        });
+
+        document.getElementById('clearCanvas').addEventListener('click', () => {
+            saveState();
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        });
+
+        document.getElementById('saveCanvas').addEventListener('click', () => {
+            const image = canvas.toDataURL('image/png');
+            const link = document.createElement('a');
+            link.href = image;
+            link.download = 'drawing.png';
+            link.click();
+        });
+
+        document.getElementById('undoAction').addEventListener('click', () => {
+            undo();
+        });
+
+        document.getElementById('shapeSelector').addEventListener('change', (e) => {
+            currentShape = e.target.value;
+        });
+
+        document.getElementById('fillShape').addEventListener('change', (e) => {
+            fillShape = e.target.checked;
+        });
+    </script>
+</body>
+</html>

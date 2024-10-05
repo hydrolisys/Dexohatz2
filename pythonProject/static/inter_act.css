@@ -1,0 +1,144 @@
+body {
+    height: 100vh;
+    width: 100vw;
+    font-family: Monaco, cursive;
+    background-size: cover;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow-x: hidden; /* Отключает горизонтальный скроллинг */
+    overflow-y: hidden;
+
+}
+
+.home-button {
+    position: absolute; /* Позволяет расположить кнопку относительно окна */
+    top: 0.2vh;         /* Расстояние от верхнего края */
+    left: 0.2vh;        /* Расстояние от левого края */
+    padding: 1vh 2vh; /* Отступы внутри кнопки */
+    font-size: 16px;   /* Размер шрифта */
+    background: white;  /* Цвет фона */
+    color: black;      /* Цвет текста */
+    border: none;      /* Убираем рамку */
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer;   /* Указатель мыши при наведении */
+    transition: transform 0.6s ease, background 0.6s ease;
+}
+.home-button:hover {
+    background: rgba(117,117,117,0.4);
+}
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Изменяет размер видео, чтобы заполнить весь экран */
+    z-index: -1; /* Устанавливаем за другими элементами */
+}
+h1 {
+    text-align: center;
+    margin: 20px;
+    font-size: 4vh;
+}
+
+p{
+    text-align: center;
+    font-size: 1vh;
+}
+
+.timeline {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 20px;
+    position: relative;
+    z-index: 1;
+}
+.year {
+    border: 2px solid #fff;
+    padding: 3vh;
+    width: 14.2857%;
+    height: 14.2857%;
+    text-align: center;
+    position: relative;
+
+}
+.card {
+    border: 1px solid #fff;
+    padding: 2vh;
+    margin: 5px;
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: background-color 0.3s;
+}
+.card:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+.dragging { opacity: 0.5; }
+
+.cont_f_in {
+    display: flex;
+    flex-direction: column;
+    width: 90%;
+    height: 90%;
+    border: white solid 1px;
+    background-color: rgba(0,0,0,0.7);
+    border-radius: 100px;
+}
+
+.cards-container {
+    display: flex;
+    gap: 5vh;
+    margin-bottom: 20px;
+}
+
+.year, .cards-container {
+    margin: 1.5vh;
+
+}
+.card img {
+    width: 100%; /* Ширина изображения равна ширине карточки */
+    height: 100%; /* Высота изображения равна высоте карточки */
+    object-fit: cover; /* Сохраняем пропорции и заполняем карточку */
+}
+
+.check_btn{
+    bottom: 10%;
+    right: 10%;
+    padding: 2.5vh 5vh;
+    background-color: #0f711f;
+    color: black;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1.8vh;
+    transition: background-color 0.3s;
+    border-radius: 30px;
+    border: 1px solid black;
+    position: fixed;
+}
+.check_btn:hover {
+    background-color: rgba(19,19,19,0.89);
+}
+
+.reset_btn {
+    bottom: 10%;
+    left: 10%;
+    position: fixed;
+    padding: 2.5vh 5vh;
+    background-color: rgb(159, 16, 16);
+    color: black;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1.8vh;
+    transition: background-color 0.3s;
+    border-radius: 30px;
+    border: 1px solid black;
+}
+
+.reset_btn:hover {
+    background-color: rgba(19,19,19,0.89);
+}
+button{
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}

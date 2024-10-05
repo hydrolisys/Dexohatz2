@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Хронология</title>
+    <style>
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* Затемнение фона */
+            display: none;
+            z-index: 999;
+        }
+
+        #messageBox {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0); /* Масштаб 0 для скрытия */
+            background-color: rgba(30, 30, 30, 0.9);
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            transition: transform 0.3s ease, opacity 0.3s ease; /* Плавное появление */
+            opacity: 0; /* Прозрачное при скрытии */
+        }
+
+        #messageBox.show {
+            display: block;
+            transform: translate(-50%, -50%) scale(1.5); /* Масштаб 1 при показе */
+            opacity: 1;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            margin: 10px;
+            cursor: pointer;
+        }
+
+
+        #closeBtn{
+            padding: 0.5vh;
+            font-size: 1.3vh;
+        }
+    </style>
+    <link rel="stylesheet" href="{{ url_for('static', filename='inter_act.css') }}">
+</head>
+<body>
+       <video autoplay loop muted class="video-background">
+        <source src="{{ url_for('static', filename='215694_small.mp4') }}" type="video/mp4">
+        Ваш браузер не поддерживает видео.
+    </video>
+    <button class="home-button" onclick="window.location.href='{{ url_for('index') }}'">To the main page!</button>
+    <div class="cont_f_in">
+        <div style="text-align: center; align-items: center">
+            <h1>Arrange the events by year</h1>
+            <div class="timeline">
+                <div class="year" data-year="2018">April 2018</div>
+                <div class="year" data-year="1995">October 1995</div>
+                <div class="year" data-year="1992">January 1992</div>
+                <div class="year" data-year="2022">2022</div>
+                <div class="year" data-year="2016">August 2016</div>
+                <div class="year" data-year="2019">2019</div>
+                <div class="year" data-year="2001">April 2001</div>
+            </div>
+
+            <h2>Cards:</h2>
+            <div id="cardsContainer" class="cards-container" style="text-align: center; align-items: center;"></div>
+
+            <div id="overlay"></div>
+            <div id="messageBox">
+                <p id="messageText"></p>
+                <button id="closeBtn">Close</button>
+            </div>
+
+            <button id="resetBtn" class="reset_btn">Reset</button>
+            <button id="checkBtn" class="check_btn">Check</button>
+        </div>
+    </div>
+
+
+    <!-- Подключение JavaScript -->
+    <script src="{{ url_for('static', filename='inter.js') }}"></script>
+</body>
+</html>

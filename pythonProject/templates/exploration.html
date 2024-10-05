@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Exploration</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style_exp.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.1/build/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.1/examples/js/loaders/GLTFLoader.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/three@0.126.1/examples/js/controls/OrbitControls.js"></script>
+    <style>
+        /* Стили для контейнера, чтобы элементы шли в одну линию */
+        .flex-container {
+            display: flex;
+            justify-content: center;   /* Центрирование по горизонтали */
+            align-items: center;       /* Центрирование по вертикали */
+            gap: 15vh;                 /* Промежуток между элементами */
+            max-width: 90%;
+        }
+        .flex-container2 {
+            display: flex;
+            justify-content: center;   /* Центрирование по горизонтали */
+            align-items: center;       /* Центрирование по вертикали */
+            gap: 15vh;                 /* Промежуток между элементами */
+        }
+
+    /* Стиль для всплывающего окна */
+        .tooltip {
+          position: relative;
+          display: inline-block;
+          cursor: pointer;
+        }
+
+        /* Стиль текста с определением */
+        .tooltip .tooltiptext {
+          visibility: hidden;
+          width: 15vh;
+          background-color: #333;
+          color: #fff;
+          text-align: center;
+          border-radius: 5px;
+          padding: 5px;
+          position: absolute;
+          z-index: 1;
+          top: 125%; /* Смещение вниз */
+          left: 50%;
+          margin-left: -100px;
+          opacity: 0;
+          transition: opacity 0.3s;
+          font-size: 1.5vh;
+        }
+
+        /* Показываем текст при наведении */
+        .tooltip:hover .tooltiptext {
+          visibility: visible;
+          opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <video autoplay loop muted class="video-background">
+        <source src="https://videos.pexels.com/video-files/10343918/10343918-hd_1920_1080_24fps.mp4" type="video/mp4"> <!-- Замените на свой URL видео -->
+        Ваш браузер не поддерживает видео.
+    </video>
+<!-- Кнопка "На Главную" -->
+<button class="home-button" onclick="window.location.href='{{ url_for('index') }}'">To the main page!</button>
+
+    <div class="container">
+        <div class="page active">
+            <div class="page-content">
+                <div style="text-align: center; align-items: center">
+                    <h1>Exoplanets</h1>
+                    <h3>Exoplanets - an exoplanet is any planet beyond our solar system. Most of the exoplanets orbit stars, but some of them may be free-floating,
+                        which means that they are not connected to any star. They are also called "extrasolar planets," and "extra-" stresses that they are outside of our solar system.</h3>
+                    <h3>Here are some examples of these planets:</h3>
+
+                    <!-- Обертка для двух div с flexbox -->
+                    <div class="flex-container">
+                        <div style="width: 15vh; height: 15vh;" id="page1_1" title="Gilese 876e"></div>
+                        <div style="width: 15vh; height: 15vh;" id="page1_2" title="Kepler 22b"></div>
+                        <div style="width: 15vh; height: 15vh;" id="page1_3" title="Gliese 581d"></div>
+                        <div style="width: 15vh; height: 15vh;" id="page1_4" title="Kepler 10c"></div>
+                    </div>
+                    <h3>Exploring Exoplanets is very important because we can find new worlds and understand the Universe better.
+                        What if we are not the only alive creatures in this Universe..?</h3>
+                </div>
+            </div>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+
+        <div class="page">
+            <div class = "page-content" style="color: white; width: 50%; height: 50%">
+                <h1 style = "text-align: center">Solar system</h1>
+                <h2 style="text-align: left">Our Solar system consists of eight planets, including our earth, revolving around one bright and very hot star called the Sun.
+                    These planets, along with many asteroids, comets, and meteorites, make up our Solar System.
+                    The eight planets are: Mercury, Venus, Earth, Mars, Jupiter, Saturn, Uranus, and Neptune.</h2>
+                <h2>For example, here is Earth's model. You can rotate it, if you want! </h2>
+                <div id = "page2_1"></div>
+            </div>
+            <div class="page-content" style="width: 50%; height: 50%;">
+                <h1 style="text-align: center">Solar system's 3D model:</h1>
+                <div id="page2"></div>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+
+<div class="page" id="page3">
+    <div class="page-content">
+        <div style="text-align: center; align-items: center; width: 100%; height: 100%">
+            <h1>The Universe</h1>
+            <h2>The universe is everything! It’s all the stars, planets, galaxies, and space itself. Imagine it like a giant room that never ends, and it is filled with amazing things like planets, stars, and even us! Everything we see in the sky, and even things that we can't see, everything is part of the universe.</h2>
+            <h2>Here you can see how much exoplanets was found until 2022, and there is a lot more than that in the Universe!</h2>
+            <iframe id="iframe3" width="50%" height="57%" data-src="https://www.youtube.com/embed/yv4DbU1CWAY?si=frcbiMPsmjG4ve77" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+        </div>
+    </div>
+    <button class="prev-btn" onclick="prevPage()">Prev</button>
+    <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+
+<div class="page" id="page4">
+    <div class="page-content" style="text-align: center; align-items: center">
+        <h1>The first discovery</h1>
+        <h3>
+            A long time ago, in 1992, two curious scientists named Aleksander and Dale loved exploring the sky. They often wondered, “Are there any planets beyond our Solar System?”
+            One day, while watching a star called a <span class="tooltip">pulsar*<span class="tooltiptext">a pulsar is a fast spinning star that makes flashes of light. Actually, it’s the leftover core of a star that exploded long ago, but it still causes light pulses.</span></span>, they noticed something surprising—it looked like something was orbiting around it! After observing it closely, they found out it was a new planet.
+            They had discovered an exoplanet! They gave it a name: PSR B1257+12 B. Well, this is not the most common name for a planet, right? But it is still a special discovery, so why not give it a unique name?
+        </h3>
+        <h3>Here you can see its 3d model!</h3>
+        <iframe id="iframe4" width="70%" height="60%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/PSR_B1257+12_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <button class="prev-btn" onclick="prevPage()">Prev</button>
+    <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+
+<div class="page" id="page5">
+    <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+        <h1>The Search for Exoplanets</h1>
+        <h3>
+            After the first discovery of Alexander and Dale, other scientists became very fascinated and interested in exoplanets. In 1995, two new scientists, whose names were Didiel and Michael, tried a lot of new methods to find a planet orbiting a star similar to our Sun.
+            After lots of effort, they noticed that the light of a star was changing! This change happened because of the gravitational pull of a planet. They had discovered a new planet and named it 51 Pegasi b.
+            Not only did they discover a new exoplanet, but also a new method based on the change of the light - radial velocity method! Even today, scientists consider this a major discovery because it showed that exoplanets can also exist around Sun-like stars!<br>
+            Fun Facts:
+            51 Pegasi b is about 50 light-years away from Earth;
+            It is considered to be <span class="tooltip">gas giant*<span class="tooltiptext">a gas giant is a really big planet that’s mostly made of gas. It doesn’t have a solid surface like Earth, which means that if you land on one, you would just float in its thick atmosphere! Jupiter and Saturn are examples of gas giants in our Solar System!</span></span>
+        </h3>
+        <h3>Here you can see its 3d model!</h3>
+        <div class="flex-container2">
+            <div id="page5_1"></div>
+        </div>
+    </div>
+    <button class="prev-btn" onclick="prevPage()">Prev</button>
+    <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+
+<div class="page" id="page6">
+    <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+        <h1>Shadow of a Planet: The First Transit Discovery</h1>
+        <h3>
+            Interest in exoplanets had grown among scientists worldwide. Some of them even formed new research teams to make the exploration easier and even more fun! One team,
+            led by David and Greg, made an observation in 1999 when they noticed a planet called HD 209458 b. It was orbiting a star in the constellation Pegasus.
+            Unfortunately, this planet had already been discovered using the radial velocity method. But David and Greg's team made something even more innovative...
+            They were able to observe the planet as it passed in front of its star, causing the star's light to dim slightly. By doing this, they were able to measure the planet’s atmosphere and size.
+            Collecting this data was not possible before and they managed to do such a groundbreaking discovery!
+            Although they didn’t discover a new planet, they developed the transit method, a new technique that will be used many times in the future to find distant space objects! But it seems like one exoplanet is not the limit...<br>
+            Fun Facts:
+            HD 209458b mainly consists of gas - such planets are called “hot Jupiter”;
+            Later studies suggested that there may be little particles of glass in the atmosphere. So, theoretically, it might rain glass!
+        </h3>
+        <iframe id="iframe6" width="60%" height="40%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/HD_209458_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <button class="prev-btn" onclick="prevPage()">Prev</button>
+    <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+
+<div class="page" id="page7">
+    <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+        <h1>Many Planets, One Star: The Discovery of a Multi-Planet System</h1>
+        <h3>
+            The discovery of HD 209458 b left many people fascinated by exoplanets! Even the oldest and most prestigious universities became deeply interested in finding new ones. Up until then, it was common to discover just one planet orbiting a star, but one day everything changed.
+            A group of independent researchers from Harvard and San Francisco announced that they had discovered two additional planets orbiting the star Upsilon Andromedae, located in the constellation Pegasus!
+            This marked the discovery of the first multi-planetary system around another star, with three planets dancing around their
+            <span class="tooltip">host star*<span class="tooltiptext">A host star is the star that has planets going around it. Just like how the Sun is the star for all the planets in our Solar System, a host star has its own planets that it takes care of!</span></span>.
+            This time they did not really complicate things and just named their planets Upsilon Andromedae b, Upsilon Andromedae c, Upsilon Andromedae d 🙂
+        </h3>
+        <iframe id="iframe7" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/system/ups_And" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <button class="prev-btn" onclick="prevPage()">Prev</button>
+    <button class="next-btn" onclick="nextPage()">Next</button>
+</div>
+        <div class="page" id="page8">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>In Search of Life: The First Habitable Exoplanet</h1>
+                <h3>
+                You’ve already heard of many exoplanets by now, but could any of them actually be good for living? Would you want to live on a planet made of glass or extremely hot gas? Probably not!
+                That was the reason why astronomers started exploring for new habitable places!
+                In 2001, some curious astronomers from Geneva University made an exciting announcement—they had discovered a planet called HD 28185 b. This planet orbits its star at about the same distance as Earth does orbit the Sun. Even more exciting, it was the first planet found in the habitable zone—the perfect spot where life might exist! By the way, it was discovered via the radial velocity method!
+                HD 28185 b is a very interesting planet, and it is about 1.5 times the size of Earth, making it a potential <span class = tooltip>rocky world*<span class = tooltiptext>A rocky world is a planet that has a solid surface made of rock and metal, like Earth! You could walk on it because it is solid and doesn’t have thick gases like gas giants do. Earth, Mars, and Venus are examples of rocky worlds in Solar System.</span></span> rather than a gas giant. Its temperature and atmospheric conditions are perfect for liquid water to exist, and it works best for supporting life!
+                </h3>
+                <iframe id="iframe8" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/HD_28185_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page9">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>Newly invented technologies</h1>
+                <h3>
+                Detecting changes in the brightness of stars, especially those hundreds of light-years away, is incredibly challenging for a human eye, isn’t it?
+                However, progress never stops, and scientists have already invented really cool technologies to help us spot those distant objects.<br>
+                One of the notable inventions is MOST (Microviability and Oscillations of Stars) satellite, launched in 2003. This suitcase-sized Canadian space telescope was designed to detect little changes in the brightness of stars, which can show when an exoplanet passes in front of its host star! <br>
+                Another exciting invention is the Spitzer Space Telescope, an infrared telescope which was launched in 2003. Spitzer collects information about the size and atmospheric composition of exoplanets. It gives us a lot of important data that was impossible to get before. Thanks to this telescope we can answer these questions: What is the radius of a certain planet? Is it a rocky world or a gas giant? Or maybe there is a planet that smells like a rotten egg? (actually there is such a planet - HD 189733b). For example, the first ever map of an exoplanet was created in 2007 with the help of this telescope!<br>
+                Another cool invention was the CoRoT satellite, launched in 2006 in France. CoRoT was designed to detect planets by observing the dimming of stars as planets pass in front of them— which is, as you know, the transit method. In May 2007, CoRoT discovered its first exoplanet!
+                Since tools like MOST, CoRoT satellite, and Spitzer telescopes were created, studying exoplanets became way easier. Now, we can collect much more data than scientists could in the 1990s, and learn even more about our amazing universe!
+                </h3>
+                <iframe id="iframe9" width="55%" height="35%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/HD_189733_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page10">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>Hit the First 1000 Planets!</h1>
+                <h3>
+                In 2009, a Delta II rocket (launch system) launched NASA's Kepler Space Telescope from Cape Canaveral Air Force Station in Florida. For the next 4 years, Kepler focused on a patch of sky with 150,000 stars. The job of the telescope was to look for changes in the brightness of stars when planets passed in front of them.
+                Can you imagine exploring space on such a huge scale? This mission led to the discovery of more than 1,000 confirmed exoplanets! Even if Kepler's mission ended in 2013 because of mechanical troubles, its legacy is considered to be the greatest "gold rushes" in exoplanet discovery!
+                The first discovery of Kepler was a rocky exoplanet! And for now, it is the smallest planet ever found beyond the solar system - Kepler -10b.
+                </h3>
+                <iframe id="iframe10" width="55%" height="35%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/Kepler-10_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <h3>
+                    Another remarkable discovery of Kepler was the First Earth-sized planet! What is more interesting, is that it is located in its star’s habitable zone. Where a liquid could exist on a planetary surface - Kepler -186f was discovered in 2014.
+                </h3>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page11">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>A new mission is born</h1>
+                <h3>
+                    In January 2014, Kepler got a fresh start in its exploration—and it didn’t take long for exciting discoveries to follow! In July 2015 Kepler found a planet that is considered to be an “older and bigger cousin” for Earth:
+                    Kepler-452b. Just like a person having a sibling! This planet is 1.6 times the size of Earth, and it orbits its star in 385 days, which is very similar to our own year around the Sun!
+                    This <span class = tooltip>"super Earth"*<span class = tooltiptext>A super Earth is a planet that is bigger than Earth but smaller than really huge planets like Neptune or Uranus. It might be made of rock like Earth, but we don’t always know for sure.</span></span>
+                    could even have liquid water on its surface, but we still don’t know its exact composition.
+                    And this time, by 2016, Kepler made it to 1200+ exoplanets!
+                    Kepler ended its exploration in November 2018. Our favorite spacecraft, which discovered more than 1000 planets, continues its drift in safe orbit around the Sun
+                </h3>
+                <iframe id="iframe11" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/planet/Kepler-452_b" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page12">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>Closest friend!</h1>
+                <h3>
+                    In August 2016, scientists discovered a new planet, and gave it a name -  Proxima b.
+                    This planet is a rocky world and also it is a bit bigger than Earth.
+                    It is orbiting Proxima Centauri, and the most special thing about this is that it is very close to the Solar System!
+                    Proxima b is at just the right - inhabitable distance from its star. It means that it might have liquid water on its surface.
+                    Could this be one of our closest planetary neighbors with the potential for life? Scientists are still trying to find out!
+                </h3>
+                <iframe id="iframe12" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/system/Proxima_Cen" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page13">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>Seven and Eight: A New Era of Planetary Discoveries</h1>
+                <h3>
+                    2017 met us with amazing news! NASA has discovered seven similar planets orbiting a
+                    <span class = tooltip>red-dwarf*<span class = tooltiptext>it is a small and cool star. It is much smaller and dimmer than the Sun, and it lasts a long time and can still have planets circling around it!</span></span>, a star TRAPPIST-1.
+                    All of these planets are similar in size to Earth, and moreover they are located in habitable zones!
+                    Future studies will help scientists to figure out if these planets have atmospheres, oceans, or even signs of living things!
+                </h3>
+                 <iframe id="iframe13" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/system/TRAPPIST-1" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+        <div class="page" id="page14">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>PLUS ONE!</h1>
+                <h3>
+                    In another exciting discovery, astronomers found an eighth planet in the Kepler-90 system!
+                    Our Solar system also has 8 planets and Kepler -90 is very similar to it.
+                    All the planets in this system are much closer to their star than Earth is to our Sun.
+                    This discovery was made with the help of artificial intelligence!
+                    It shows how technologies improved over the course of 20 years!
+
+                </h3>
+                <iframe id="iframe14" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/system/Kepler-90" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                <h3>
+                    By the way - you can ask questions from the added AI on this website!
+                </h3>
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+                <div class="page" id="page15">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>The Launch of TESS</h1>
+                <h3>
+                    In April 2018, the Transiting Exoplanet Survey Satellite (TESS) was launched into space, and it’s on a mission to discover many new planets. It is expected to find a variety of new exoplanets!
+                    We expect to discover new rocky worlds, gas giants, and many more! TESS will help us explore the amazing diversity of our galaxy.
+                    Just months after the start,  TESS delivered its first stunning science image of the Milky Way! TESS also found its first three confirmed exoplanets: LHS 3844b, Pi Mensae c, and HD 21749b.
+                </h3>
+                <iframe id="iframe15" width="55%" height="55%" data-src="https://eyes.nasa.gov/apps/exo/#/spacecraft/sc_tess" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+            <button class="next-btn" onclick="nextPage()">Next</button>
+        </div>
+
+                <div class="page" id="page16">
+            <div class="page-content" style="justify-content: center; align-items: center; text-align: center">
+                <h1>Reaching New heights: 4,000 planets and more!</h1>
+                <h2>
+                    Since the early days of exoplanet discovery, the speed of exploration has only improved: By 2019, planet count reached 4,000 exoplanets! Each new discovery brings us closer to big answers: how planets form, how they behave and how life could exist beyond the solar system.
+                    In 2022, another boundary was crossed: 5,000 exoplanets. Can you believe it? Between the first discovery in 1992 and today, we gained knowledge about the variety of exoplanets. Exoplanets range in size from massive gas giants to small rocky worlds; some are located in the habitable zones of their stars! But it is not the end! New missions like TESS and the James Webb Space Telescope are continuing, and astronomers predict we’ll discover even more planets in the coming years. Who knows what other secrets are waiting out there in the stars?
+                </h2>
+                <iframe id="iframe16" width="35%" height="30%" data-src="https://eyes.nasa.gov/apps/exo/#/" title="NASA" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
+                <h1>
+                    First, 4,000 and then 5,000 exoplanets-once thought impossible-are merely the starting points!
+                </h1>
+
+            </div>
+            <button class="prev-btn" onclick="prevPage()">Prev</button>
+        </div>
+
+    </div>
+
+
+        <div id="mySidebar" class="sidebar">
+            <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+
+            <div class="sidebar-content">
+                <form id="questionForm" method="POST" onsubmit="return handleSubmit(event)">
+                    <textarea name="query" rows="4" placeholder="Ask me about space..."></textarea>
+                    <input type="submit" value="Send">
+                </form>
+
+                <!-- Показать ответ, если он есть -->
+                {% if response %}
+                <div class="response">
+                    <h2>Answer:</h2>
+                    <p>{{ response }}</p>
+                </div>
+                {% endif %}
+
+            </div>
+
+        </div>
+
+    <button class="open-btn" onclick="openSidebar()">Ask a Question</button>
+
+
+
+
+    <script>
+const scenes = [];
+const renderers = [];
+const cameras = [];
+const controls = [];
+let rotatingModels = [];
+let mixers = [];
+const loader = new THREE.GLTFLoader();
+
+// Массив для хранения WH для каждой сцены
+const sceneWH = [];
+// Массив для хранения статуса видимости для каждой сцены
+const visibilityStatus = [];
+
+// Используем сжатие текстур для оптимизации (пункт 1)
+const textureLoader = new THREE.TextureLoader();
+const compressedTexture = textureLoader.load('compressed_texture.ktx2');
+
+// Используем IntersectionObserver для отслеживания видимости каждого контейнера
+function observeVisibility(containerId, sceneIndex) {
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+                visibilityStatus[sceneIndex] = true;  // Включаем рендеринг
+            } else {
+                visibilityStatus[sceneIndex] = false; // Останавливаем рендеринг
+            }
+        });
+    });
+    const container = document.getElementById(containerId);
+    observer.observe(container);
+}
+
+function createScene(containerId, modelPath, modelMas, WH, camPos) {
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+    renderer.shadowMap.enabled = false; // Отключить тени
+
+    renderer.setClearColor(0x2d0732, 0);
+    const container = document.getElementById(containerId);
+    renderer.setSize(window.innerWidth / WH, window.innerHeight / WH);
+    container.appendChild(renderer.domElement);
+
+    let model;
+    const targetScale = modelMas;
+    let currentScale = modelMas;
+    let isRotating = false;
+
+    // Используем LOD для оптимизации полигонов (пункт 2)
+    const lod = new THREE.LOD();
+
+    loader.load(
+        modelPath,
+        function(gltf) {
+            model = gltf.scene;
+            lod.addLevel(model, 0); // Высокая детализация
+            scene.add(lod);
+
+            model.position.set(0, 0, 0);
+            model.scale.set(modelMas, modelMas, modelMas);
+
+            // Добавляем анимацию
+            const mixer = new THREE.AnimationMixer(model);
+            gltf.animations.forEach((clip) => {
+                mixer.clipAction(clip).play();
+            });
+            mixers.push(mixer);
+        },
+        undefined,
+        function(error) {
+            console.error('Ошибка загрузки модели:', error);
+            loader.dispose(); // Очищаем память, если что-то пошло не так
+        }
+    );
+
+    camera.position.z = camPos;
+
+    // Оптимизация освещения (пункт 6)
+    const ambientLight = new THREE.AmbientLight(0xffffff, 1);
+    scene.add(ambientLight);
+
+    const directionalLight = new THREE.DirectionalLight(0xffffff, 0.8);
+    directionalLight.position.set(1, 1, 1);
+    scene.add(directionalLight);
+
+    const orbitControls = new THREE.OrbitControls(camera, renderer.domElement);
+    orbitControls.enableDamping = true;
+    orbitControls.dampingFactor = 0.05;
+    orbitControls.screenSpacePanning = false;
+    orbitControls.minDistance = 5;
+    orbitControls.maxDistance = 15;
+    orbitControls.enablePan = false;
+
+    scenes.push(scene);
+    renderers.push(renderer);
+    cameras.push(camera);
+    controls.push(orbitControls);
+
+    // Сохраняем значение WH для этой сцены
+    sceneWH.push(WH);
+    visibilityStatus.push(false); // Изначально сцена не видима
+
+    // Наблюдаем за видимостью этой сцены
+    observeVisibility(containerId, scenes.length - 1);
+
+    container.addEventListener('mouseover', () => {
+        rotatingModels.push({ model, targetScale: modelMas * 1.1, currentScale: modelMas, isRotating: true });
+    });
+
+    container.addEventListener('mouseout', () => {
+        rotatingModels.forEach(obj => {
+            if (obj.model === model) {
+                obj.targetScale = modelMas;
+                obj.isRotating = false;
+            }
+        });
+    });
+
+    // Обработка потери контекста (пункт 5)
+    renderer.domElement.addEventListener('webglcontextlost', function(event) {
+        event.preventDefault();
+        console.log("WebGL context lost. Attempting to restore...");
+    });
+
+    renderer.domElement.addEventListener('webglcontextrestored', function() {
+        console.log("WebGL context restored.");
+    });
+
+
+    return renderer;
+}
+
+// Создаем 3D сцены для каждой страницы с индивидуальным WH
+createScene('page1_1', "{{ url_for('static', filename='gliese_876_e.glb') }}", 0.006, 6, 40);
+createScene('page1_2', "{{ url_for('static', filename='kepler_22_b.glb') }}", 0.006, 6, 40);
+createScene('page1_3', "{{ url_for('static', filename='gliese_581_d.glb') }}", 0.006, 6, 40);
+createScene('page1_4', "{{ url_for('static', filename='kepler_10_c.glb') }}", 0.006, 6, 40);
+createScene('page2_1', "{{ url_for('static', filename='earth.glb') }}", 0.08, 5, 40);
+createScene('page2', "{{ url_for('static', filename='solar_system_animation.glb') }}", 0.1, 2, 10);
+createScene('page5_1', "{{ url_for('static', filename='51_pegasi_b.glb') }}", 2, 2.5, 6);
+
+// Ограничение FPS для снижения нагрузки
+let lastTime = 0;
+const fps = 24;
+const fpsInterval = 1000 / fps;
+
+function animate(time) {
+    requestAnimationFrame(animate);
+
+    const deltaTime = time - lastTime;
+    if (deltaTime > fpsInterval) {
+        lastTime = time - (deltaTime % fpsInterval);
+
+        scenes.forEach((scene, index) => {
+            if (visibilityStatus[index]) {  // Рендерим только, если сцена видима
+                controls[index].update();
+                renderers[index].render(scene, cameras[index]);
+            }
+        });
+
+        rotatingModels.forEach((obj) => {
+            const { model, targetScale, currentScale, isRotating } = obj;
+
+            if (model) {
+                if (isRotating) {
+                    model.rotation.y += 0.01;
+                }
+
+                obj.currentScale += (obj.targetScale - obj.currentScale) * 0.1;
+                model.scale.set(obj.currentScale, obj.currentScale, obj.currentScale);
+            }
+        });
+
+        mixers.forEach((mixer) => {
+            mixer.update(0.01);
+        });
+    }
+}
+
+animate();
+
+// Обработка изменения размера окна
+window.addEventListener('resize', function () {
+    scenes.forEach((scene, index) => {
+        const width = window.innerWidth / sceneWH[index]; // Используем соответствующий WH для каждой сцены
+        const height = window.innerHeight / sceneWH[index];
+        renderers[index].setSize(width, height);
+        cameras[index].aspect = width / height;
+        cameras[index].updateProjectionMatrix();
+    });
+});
+
+// Перезагрузка каждые 30 секунд для очистки ресурсов
+setInterval(function() {
+    scenes.forEach((scene, index) => {
+        renderers[index].dispose(); // Очищаем ресурсы рендерера
+        cameras[index].updateProjectionMatrix(); // Обновляем матрицу проекции
+    });
+}, 30000);
+
+
+
+      // Открыть боковую панель
+        function openSidebar() {
+            document.getElementById("mySidebar").style.width = "400px"; // ширина панели
+        }
+
+        // Закрыть боковую панель
+        function closeSidebar() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        // Обработчик события отправки формы
+        function handleSubmit(event) {
+            // Открыть боковую панель, если она закрыта
+            openSidebar();
+            // Не разрешаем отправку формы
+            event.preventDefault();
+            // Вы можете добавить дополнительную логику здесь, если нужно
+            document.getElementById("questionForm").submit(); // Отправить форму
+            return false; // Предотвращаем дальнейшую отправку
+        }
+
+        // Загрузка страницы
+        function loadPage(page) {
+            const contactPage = document.getElementById('contactPage');
+            const sidebar = document.getElementById('mySidebar');
+
+            if (page === 'contacts') {
+                contactPage.style.display = 'block'; // Показываем страницу контактов
+                sidebar.style.width = '0'; // Закрываем боковую панель
+            } else {
+                contactPage.style.display = 'none'; // Скрываем страницу контактов
+            }
+
+            // Скрытие боковой панели при переходе
+            if (page !== 'contacts') {
+                sidebar.style.width = '0'; // Закрываем боковую панель
+            }
+        }
+
+    let currentPage = 0;
+    const pages = document.querySelectorAll('.page');
+    let isAnimating = false;
+
+    function loadIframe(iframe) {
+        if (iframe) {
+            const src = iframe.getAttribute('data-src'); // Используйте атрибут data-src для хранения URL
+            if (src) {
+                iframe.setAttribute('src', src); // Устанавливаем URL, только если он есть
+            }
+        }
+    }
+
+    function nextPage() {
+        if (!isAnimating && currentPage < pages.length - 1) {
+            isAnimating = true;
+            requestAnimationFrame(() => {
+                pages[currentPage].classList.remove('active');
+
+                // Проверка наличия iframe и его отключение
+                const currentIframe = pages[currentPage].querySelector('iframe');
+                if (currentIframe) {
+                    currentIframe.setAttribute('src', ''); // Отключаем текущий iframe
+                }
+
+                currentPage++;
+                pages[currentPage].classList.add('active');
+
+                // Загружаем iframe для следующей страницы, если он есть
+                loadIframe(pages[currentPage].querySelector('iframe'));
+
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500); // Время синхронизации с анимацией
+            });
+        }
+    }
+
+    function prevPage() {
+        if (!isAnimating && currentPage > 0) {
+            isAnimating = true;
+            requestAnimationFrame(() => {
+                pages[currentPage].classList.remove('active');
+
+                // Проверка наличия iframe и его отключение
+                const currentIframe = pages[currentPage].querySelector('iframe');
+                if (currentIframe) {
+                    currentIframe.setAttribute('src', ''); // Отключаем текущий iframe
+                }
+
+                currentPage--;
+                pages[currentPage].classList.add('active');
+
+                // Загружаем iframe для предыдущей страницы, если он есть
+                loadIframe(pages[currentPage].querySelector('iframe'));
+
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 500);
+            });
+        }
+    }
+
+
+    </script>
+
+    <script src="{{ url_for('static', filename='page_anim.js') }}"></script>
+</body>
+</html>

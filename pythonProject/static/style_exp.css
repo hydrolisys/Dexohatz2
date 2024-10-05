@@ -1,0 +1,245 @@
+body {
+    font-family: 'Comic Sans MS', cursive, sans-serif; /* Используем детский шрифт */
+    display: flex;
+    justify-content: center; /* Центрируем по горизонтали */
+    align-items: center; /* Центрируем по вертикали */
+    height: 100vh; /* Занимаем всю высоту экрана */
+    margin: 0; /* Убираем отступы */
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url("fon.png") ;
+}
+
+.video-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Изменяет размер видео, чтобы заполнить весь экран */
+    z-index: -1; /* Устанавливаем за другими элементами */
+}
+
+button{
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+}
+
+h1 {
+    color: white; /* Цвет текста */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+    font-size: 4vh; /* Размер шрифта */
+}
+h2 {
+    color: white; /* Цвет текста */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+    font-size: 2.3vh; /* Размер шрифта */
+    font-family: Monaco, cursive;
+}
+
+h3{
+    color: white;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    font-size: 2vh;
+    font-family: Monaco, cursive;
+}
+
+#b_ {
+    color: #FF6347;
+    font-family: 'Comic Sans MS', cursive, sans-serif;
+    font-size: 30px;
+    background: #A5D6D9;
+    text-align: center;
+    height: 200px;
+    width: 300px;
+    border-radius: 100px;
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+}
+
+.container {
+    width: 80%;
+    height: 80%;
+    position: fixed;
+    perspective: 1200px; /* Для 3D эффекта */
+}
+/* #19061d */
+.page {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.79);
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    backface-visibility: hidden; /* Чтобы скрыть заднюю сторону */
+    transform-origin: center;
+    transform: rotateY(0deg) scale(0.9);
+    transition: transform 1.5s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.45s ease-in-out;
+    z-index: 1;
+    opacity: 0;
+    display: flex;
+    /* justify-content: center; /* Центрирование по горизонтали */
+    /*align-items: center; /* Центрирование по вертикали */
+    border-radius: 50px;
+    border: 1px solid white;
+
+}
+
+.page.active {
+    z-index: 2;
+    transform: rotateY(0deg) scale(1);
+    opacity: 1;
+
+}
+
+.page-content {
+    opacity: 0;
+    transform: translateY(20px); /* Легкое смещение текста */
+    transition: opacity 0.75s ease-in-out, transform 1.5s ease-in-out;
+    color: white
+}
+
+.page.active .page-content {
+    opacity: 1;
+    transform: translateY(0); /* Текст возвращается на место */
+}
+
+.prev-btn {
+    bottom: 40px;
+    left: 40px;
+    position: fixed;
+    padding: 2.5vh 5vh;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1.8vh;
+    transition: background-color 0.3s;
+    border-radius: 30px;
+    border: 1px solid black;
+}
+
+.prev-btn:hover {
+    background-color: rgb(136, 129, 129);
+}
+
+.next-btn {
+    bottom: 40px;
+    right: 40px;
+    position: fixed;
+    padding: 2.5vh 5vh;
+    background-color: white;
+    color: black;
+    cursor: pointer;
+    margin-top: 20px;
+    font-size: 1.8vh;
+    transition: background-color 0.3s;
+    border-radius: 30px;
+    border: 1px solid black;
+}
+
+.next-btn:hover {
+    background-color: rgb(136, 129, 129);
+}
+.home-button {
+    position: absolute; /* Позволяет расположить кнопку относительно окна */
+    top: 10px;         /* Расстояние от верхнего края */
+    left: 20px;        /* Расстояние от левого края */
+    padding: 10px 20px; /* Отступы внутри кнопки */
+    font-size: 16px;   /* Размер шрифта */
+    background: linear-gradient(90deg, #ff0080, #00bfff);  /* Цвет фона */
+    color: black;      /* Цвет текста */
+    border: none;      /* Убираем рамку */
+    border-radius: 5px; /* Скругленные углы */
+    cursor: pointer;   /* Указатель мыши при наведении */
+    transition: transform 0.6s ease, background 0.6s ease;
+}
+
+.home-button:hover {
+    background: linear-gradient(90deg, #aa0069, #096b93);  /* Цвет при наведении */
+    transition: 600ms;
+    scale: 1.1;
+}
+        /* Скрытая боковая панель (выезжает справа) */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            object-fit: fill;
+            z-index: 10;
+            overflow-y: hidden;
+            border-left: rgba(43, 8, 38, 0.89) solid 4px;
+            background-image: url("https://i.etsystatic.com/30080781/r/il/aa08c9/4747817313/il_570xN.4747817313_hnns.jpg");
+
+        }
+
+
+        /* Стили для контента боковой панели */
+        .sidebar-content {
+            color: white;
+            padding: 20px;
+            text-align: center; /* Центрирование текста */
+        }
+
+        /* Кнопка закрытия на боковой панели */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 36px;
+            color: rgba(207, 11, 85, 0.89); /* Ярко-красный цвет кнопки закрытия */
+            cursor: pointer;
+        }
+
+        textarea, input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            font-size: 16px; /* Размер шрифта для текстовой области и кнопки отправки */
+        }
+
+        textarea {
+            background-color: rgba(255, 255, 255); /* Светлый фон для текстовой области */
+            color: black; /* Цвет текста в текстовой области */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        input[type="submit"] {
+            background-color: rgba(53, 6, 50, 0.89); /* Зеленый цвет кнопки отправки */
+            color: white;
+            transition: background-color 0.3s;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        input[type="submit"]:hover {
+            background-color: rgb(25, 10, 37); /* Цвет кнопки отправки при наведении */
+        }
+
+        /* Для отображения ответа от модели */
+        .response {
+            background-color: rgba(255, 255, 255, 0.9); /* Светлый фон для ответа */
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: black;
+        }
+                /* Стили для кнопки */
+        .open-btn {
+            padding: 10px 80px;
+            background-color: deepskyblue; /* Ярко-оранжевый цвет кнопки */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 50px; /* Скругление углов кнопки */
+            position: fixed; /* Зафиксируем кнопку */
+            bottom: 10px; /* Расположим на 20px от нижнего края */
+            right: 20px; /* Расположим на 20px от правого края */
+        }

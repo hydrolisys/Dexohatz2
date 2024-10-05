@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Q&A for Kids</title>
+    <style>
+        body {
+            font-family: 'Comic Sans MS', cursive, sans-serif; /* Используем детский шрифт */
+            margin: 0;
+            overflow: hidden; /* Убираем прокрутку */
+            height: 100%;
+            width: 100%;
+            text-align: center;
+
+        }
+        h1 {
+            color: white; /* Цвет текста */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+            font-size: 4.4vh; /* Размер шрифта */
+            font-family: Monaco, cursive;
+        }
+        h2 {
+            color: white; /* Цвет текста */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+            font-size: 2.6vh; /* Размер шрифта */
+            font-family: Monaco, cursive;
+        }
+
+        /* Видеофон */
+        .video-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover; /* Изменяет размер видео, чтобы заполнить весь экран */
+            z-index: -1; /* Устанавливаем за другими элементами */
+        }
+
+        /* Основные стили страницы */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            color: white; /* Цвет текста заголовка и кнопки */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Тень для текста */
+            background-color: rgba(0, 0, 0, 0.7); /* Полупрозрачный фон для заголовка */
+        }
+
+        .tabs {
+            display: flex;
+            gap: 20px; /* Пробел между вкладками */
+        }
+
+        .tab {
+            color: white;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .tab:hover {
+            color: rgba(255, 165, 0, 1); /* Цвет вкладки при наведении */
+        }
+
+        /* Стили для кнопки "Приступить к исследованию!" */
+        .explore-btn {
+            display: block;
+            height: 200px;
+            margin: auto ; /* Центрируем кнопку по горизонтали */
+            margin-top: 10vh;
+            padding: 20px 50px;
+            font-size: 56px;
+            background: linear-gradient(90deg, #ff0080, #00bfff); /* Сине-розовый градиент */
+            color: white;
+            border: none;
+            border-radius: 100px; /* Скругление углов */
+            cursor: pointer;
+            text-align: center;
+            transition: transform 0.3s ease, background 0.3s ease;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .explore-btn:hover {
+            transform: scale(1.1); /* Увеличение кнопки при наведении */
+            background: linear-gradient(90deg, #ff33aa, #33ccff); /* Темнее при наведении */
+        }
+
+        /* Стили для кнопки */
+        .open-btn {
+            padding: 10px 80px;
+            background-color: deepskyblue; /* Ярко-оранжевый цвет кнопки */
+            color: white;
+            border: none;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            border-radius: 50px; /* Скругление углов кнопки */
+            position: fixed; /* Зафиксируем кнопку */
+            bottom: 10px; /* Расположим на 20px от нижнего края */
+            right: 20px; /* Расположим на 20px от правого края */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        .open-btn:hover {
+            background-color: rgb(6, 129, 156); /* Цвет кнопки при наведении */
+        }
+
+        /* Стили для страницы контактов */
+        .contact-info {
+            color: white;
+            text-align: center; /* Центрирование текста */
+            margin-top: 20px;
+        }
+
+        /* Скрытая боковая панель (выезжает справа) */
+        .sidebar {
+            height: 100%;
+            width: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            overflow-x: hidden;
+            transition: 0.5s;
+            padding-top: 60px;
+            object-fit: fill;
+            z-index: 10;
+            overflow-y: hidden;
+            border-left: rgba(43, 8, 38, 0.89) solid 4px;
+            background-image: url("https://i.etsystatic.com/30080781/r/il/aa08c9/4747817313/il_570xN.4747817313_hnns.jpg");
+
+        }
+
+        /* Стили для контента боковой панели */
+        .sidebar-content {
+            color: white;
+            padding: 20px;
+            text-align: center; /* Центрирование текста */
+        }
+
+        /* Кнопка закрытия на боковой панели */
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 25px;
+            font-size: 36px;
+            color: rgba(207, 11, 85, 0.89); /* Ярко-красный цвет кнопки закрытия */
+            cursor: pointer;
+        }
+
+        textarea, input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin: 10px 0;
+            border: none;
+            border-radius: 5px; /* Скругление углов */
+            font-size: 16px; /* Размер шрифта для текстовой области и кнопки отправки */
+        }
+
+        textarea {
+            background-color: rgba(255, 255, 255); /* Светлый фон для текстовой области */
+            color: black; /* Цвет текста в текстовой области */
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        input[type="submit"] {
+            background-color: rgba(53, 6, 50, 0.89); /* Зеленый цвет кнопки отправки */
+            color: white;
+            transition: background-color 0.3s;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+        }
+
+        input[type="submit"]:hover {
+            background-color: rgb(25, 10, 37); /* Цвет кнопки отправки при наведении */
+        }
+        /* Для отображения ответа от модели */
+        .response {
+            background-color: rgba(255, 255, 255, 0.9); /* Светлый фон для ответа */
+            padding: 20px;
+            margin-top: 20px;
+            border-radius: 5px;
+            color: black;
+        }
+    </style>
+</head>
+<body style = "align-items: center; justify-content: center">
+    <!-- Видеофон -->
+    <video autoplay loop muted class="video-background">
+        <source src="https://videos.pexels.com/video-files/3141209/3141209-uhd_2560_1440_25fps.mp4" type="video/mp4"> <!-- Замените на свой URL видео -->
+        Ваш браузер не поддерживает видео.
+    </video>
+
+    <div class="header">
+        <div class="tabs">
+            <div class="tab" onclick="loadPage('home')">Main</div>
+            <div class="tab" onclick="window.location.href='/interactives';">Games</div>
+            <div class="tab" onclick="loadPage('contacts')">Contacts</div>
+            <div class="tab" onclick="window.location.href='/drawing';">Drawing</div>
+        </div>
+    </div>
+
+    <h1>Why NASA's Exoplanet Exploration Program is important?</h1>
+    <h2></h2>
+    <h2>
+        NASA's Exoplanet Exploration Program is crucial as it aims to achieve goals such as:<br>
+        Searching for habitable worlds; <br>
+        Discovering signs of life beyond the Solar System;<br>
+        Characterizing planetary atmospheres;<br>
+        Explore Planetary Diversity;<br>
+        Study Planetary Formation and Evolution.<br>
+    </h2>
+    <!-- Кнопка "Приступить к исследованию!" с функцией перенаправления -->
+    <button class="explore-btn" onclick="window.location.href='/exploration';">Start Exploring!</button>
+
+    <!-- Боковая панель -->
+    <div id="mySidebar" class="sidebar">
+        <a href="javascript:void(0)" class="close-btn" onclick="closeSidebar()">&times;</a>
+
+        <div class="sidebar-content">
+            <form id="questionForm" method="POST" onsubmit="return handleSubmit(event)">
+                <textarea name="query" rows="4" placeholder="Ask me something about space"></textarea>
+                <input type="submit" value="Send">
+            </form>
+
+            <!-- Показать ответ, если он есть -->
+            {% if response %}
+            <div class="response">
+                <h2>Answer:</h2>
+                <p>{{ response }}</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <button class="open-btn" onclick="openSidebar()">Ask a question</button>
+
+    <!-- Контент для вкладки "Контакты" -->
+    <div id="contactPage" class="contact-info" style="display:none;">
+        <h2>Contact info</h2>
+        <p>Phone number: (123) 456-7890</p>
+        <p>Email: info@spaceqa.com</p>
+    </div>
+
+    <script>
+        // Открыть боковую панель
+        function openSidebar() {
+            document.getElementById("mySidebar").style.width = "400px"; // ширина панели
+        }
+
+        // Закрыть боковую панель
+        function closeSidebar() {
+            document.getElementById("mySidebar").style.width = "0";
+        }
+
+        // Обработчик события отправки формы
+        function handleSubmit(event) {
+            // Открыть боковую панель, если она закрыта
+            openSidebar();
+            // Не разрешаем отправку формы
+            event.preventDefault();
+            // Вы можете добавить дополнительную логику здесь, если нужно
+            document.getElementById("questionForm").submit(); // Отправить форму
+            return false; // Предотвращаем дальнейшую отправку
+        }
+
+        // Загрузка страницы
+        function loadPage(page) {
+            const contactPage = document.getElementById('contactPage');
+            const sidebar = document.getElementById('mySidebar');
+
+            if (page === 'contacts') {
+                contactPage.style.display = 'block'; // Показываем страницу контактов
+                sidebar.style.width = '0'; // Закрываем боковую панель
+            } else {
+                contactPage.style.display = 'none'; // Скрываем страницу контактов
+            }
+
+            // Скрытие боковой панели при переходе
+            if (page !== 'contacts') {
+                sidebar.style.width = '0'; // Закрываем боковую панель
+            }
+        }
+    </script>
+</body>
+</html>
