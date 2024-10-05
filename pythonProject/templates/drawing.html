@@ -7,20 +7,108 @@
     <style>
         html, body {
             height: 100%;
+            width: 100%;
             margin: 0;
             display: flex;
-            align-items: center; /* Центрирование по вертикали */
-            justify-content: center; /* Центрирование по горизонтали */
+            flex-direction: column;
+            align-items: center;
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            background-image: url('{{ url_for('static', filename='fon.png') }}');
+            background-size: cover;
+            background-repeat: no-repeat;
+            background-position: center;
+            color: white;
         }
         #drawCanvas {
-            width: 80vw; /* 80% от ширины окна */
-            height: 80vh; /* 80% от высоты окна */
-            border: 1px solid black;
+            width: 80vw;
+            height: 80vh;
+            border: 1vh solid black;
             display: block;
+            background-color: white;
         }
         .tools {
             text-align: center;
             margin-top: 10px;
+        }
+        .button_dr {
+            padding: 1vh 2vh;
+            background: #2d0732;
+            color: white;
+            border-radius: 1vh;
+            font-weight: 5000;
+            margin: 1vh;
+        }
+        button {
+            font-family: 'Comic Sans MS', cursive, sans-serif;
+            font-size: 16px;
+            font-weight: bold;
+            color: white;
+            background-color: #007BFF;
+            border: none;
+            cursor: pointer;
+        }
+        .button_dr.hover {
+            transform: scale(1.1);
+            transition: 0.6s;
+            background-color: #ffffff;
+        }
+        select {
+            font-family: 'Arial', sans-serif;
+            font-size: 1vh;
+            color: #333;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            padding: 5px 10px;
+            cursor: pointer;
+            appearance: none;
+            -moz-appearance: none;
+            -webkit-appearance: none;
+        }
+        .custom-select {
+            position: relative;
+        }
+        .custom-select::after {
+            content: '▼';
+            position: absolute;
+            top: 50%;
+            right: 10px;
+            transform: translateY(-50%);
+            pointer-events: none;
+        }
+        .tools {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-top: 20px;
+        }
+        .tools label {
+            margin-right: 10px;
+        }
+        .tools select,
+        .tools input[type="color"],
+        .tools input[type="range"],
+        .tools input[type="checkbox"],
+        .tools button {
+            margin-right: 10px;
+        }
+        .home-button {
+            position: absolute;
+            bottom: 2vh;
+            left: 2vh;
+            padding: 10px 20px;
+            font-size: 16px;
+            background: linear-gradient(90deg, #ff0080, #00bfff);
+            color: #dad0d0;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: transform 0.6s ease, background 0.6s ease;
+        }
+        .home-button:hover {
+            background: linear-gradient(90deg, #aa0069, #096b93);
+            transition: 600ms;
+            scale: 1.05;
         }
     </style>
 </head>
@@ -32,38 +120,50 @@
         <label for="brushSize">Brush Size:</label>
         <input type="range" id="brushSize" min="1" max="20" value="5">
         <label for="shapeSelector">Shape:</label>
-        <select id="shapeSelector">
-            <option value="brush">Brush</option>
-            <option value="eraser">Eraser</option>
-            <option value="circle">Circle</option>
-            <option value="rectangle">Rectangle</option>
-            <option value="line">Line</option>
-        </select>
-        <label for="fillShape">Fill Shape:</label>
+        <div class="custom-select">
+            <select id="shapeSelector">
+                <option value="brush">Brush</option>
+                <option value="eraser">Eraser</option>
+                <option value="circle">Circle</option>
+                <option value="rectangle">Rectangle</option>
+                <option value="line">Line</option>
+            </select>
+        </div>
+        <label for="fillShape" style="font-family: 'Comic Sans MS', cursive, sans-serif">Fill Shape:</label>
         <input type="checkbox" id="fillShape">
-        <button id="clearCanvas">Clear Canvas</button>
-        <button id="undoAction">Undo</button>
-        <button id="saveCanvas">Save Drawing</button>
+        <button id="clearCanvas" class="button_dr">Clear Canvas</button>
+        <button id="undoAction" class="button_dr">Undo</button>
+        <button id="saveCanvas" class="button_dr">Save Drawing</button>
     </div>
-
+    <button class="home-button" onclick="window.location.href='{{ url_for('index') }}'">To the main page!</button>
     <script>
         const canvas = document.getElementById('drawCanvas');
         const ctx = canvas.getContext('2d');
 
-        // Установка размеров холста
         function resizeCanvas() {
             canvas.width = canvas.clientWidth;
             canvas.height = canvas.clientHeight;
         }
 
         window.addEventListener('resize', resizeCanvas);
-        resizeCanvas(); // Вызов функции для установки размеров при загрузке
+        resizeCanvas();
 
         let painting = false;
         let startX, startY;
         let currentShape = 'brush';
         let history = [];
         let fillShape = false;
+        let canvasState;
+
+        function saveCanvasState() {
+            canvasState = ctx.getImageData(0, 0, canvas.width, canvas.height);
+        }
+
+        function restoreCanvasState() {
+            if (canvasState) {
+                ctx.putImageData(canvasState, 0, 0);
+            }
+        }
 
         function saveState() {
             history.push(canvas.toDataURL());
@@ -90,9 +190,12 @@
             const mousePos = getMousePos(canvas, e);
             startX = mousePos.x;
             startY = mousePos.y;
+
             if (currentShape === 'brush' || currentShape === 'eraser') {
                 saveState();
                 draw(e);
+            } else {
+                saveCanvasState();
             }
         }
 
@@ -125,118 +228,98 @@
         }
 
         function drawPreview(e) {
-            // Рисуем предварительный вид фигуры
-            const mousePos = getMousePos(canvas, e);
-            // Рисуем фигуру на отдельном слое
-            const prevLineWidth = ctx.lineWidth;
-            const prevStrokeStyle = ctx.strokeStyle;
-            ctx.lineWidth = document.getElementById('brushSize').value;
-            ctx.strokeStyle = document.getElementById('colorPicker').value;
+            if (!painting) return;
 
-            // Отрисовка предыдущих состояний
-            const img = new Image();
-            img.src = history[history.length - 1]; // Получаем последнее сохранённое состояние
-            img.onload = () => {
-                ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.drawImage(img, 0, 0); // Рисуем последнее состояние холста
-                // Рисуем фигуру
-                if (currentShape === 'circle') {
-                    drawCircle(mousePos);
-                } else if (currentShape === 'rectangle') {
-                    drawRectangle(mousePos);
-                } else if (currentShape === 'line') {
-                    drawLine(mousePos);
-                }
-            };
-            ctx.lineWidth = prevLineWidth;
-            ctx.strokeStyle = prevStrokeStyle;
+            const mousePos = getMousePos(canvas, e);
+            restoreCanvasState();
+
+            if (currentShape === 'circle') {
+                drawCircle(mousePos);
+            } else if (currentShape === 'rectangle') {
+                drawRectangle(mousePos);
+            } else if (currentShape === 'line') {
+                drawLine(mousePos);
+            }
         }
 
         function drawFinalShape(e) {
+            const mousePos = getMousePos(canvas, e);
             if (currentShape === 'circle') {
-                drawCircle(getMousePos(canvas, e));
+                drawCircle(mousePos, true);
             } else if (currentShape === 'rectangle') {
-                drawRectangle(getMousePos(canvas, e));
+                drawRectangle(mousePos, true);
             } else if (currentShape === 'line') {
-                drawLine(getMousePos(canvas, e));
+                drawLine(mousePos, true);
             }
         }
 
-        function drawCircle(mousePos) {
-            const radius = Math.sqrt(Math.pow(mousePos.x - startX, 2) + Math.pow(mousePos.y - startY, 2));
+        function drawCircle(mousePos, isFinal = false) {
+            const radius = Math.abs(startX - mousePos.x);
             ctx.beginPath();
             ctx.arc(startX, startY, radius, 0, Math.PI * 2);
-            if (fillShape) {
-                ctx.fillStyle = document.getElementById('colorPicker').value;
+            ctx.closePath();
+            if (fillShape && isFinal) {
+                ctx.fillStyle = ctx.strokeStyle;
                 ctx.fill();
-            } else {
-                ctx.stroke();
             }
+            ctx.stroke();
         }
 
-        function drawRectangle(mousePos) {
+        function drawRectangle(mousePos, isFinal = false) {
             const width = mousePos.x - startX;
             const height = mousePos.y - startY;
             ctx.beginPath();
             ctx.rect(startX, startY, width, height);
-            if (fillShape) {
-                ctx.fillStyle = document.getElementById('colorPicker').value;
+            ctx.closePath();
+            if (fillShape && isFinal) {
+                ctx.fillStyle = ctx.strokeStyle;
                 ctx.fill();
-            } else {
-                ctx.stroke();
             }
+            ctx.stroke();
         }
 
-        function drawLine(mousePos) {
+        function drawLine(mousePos, isFinal = false) {
             ctx.beginPath();
             ctx.moveTo(startX, startY);
             ctx.lineTo(mousePos.x, mousePos.y);
+            ctx.closePath();
             ctx.stroke();
         }
+
+        document.getElementById('shapeSelector').addEventListener('change', (event) => {
+            currentShape = event.target.value;
+            if (currentShape !== 'brush' && currentShape !== 'eraser') {
+                ctx.clearRect(0, 0, canvas.width, canvas.height);
+            }
+        });
+
+        document.getElementById('fillShape').addEventListener('change', (event) => {
+            fillShape = event.target.checked;
+        });
+
+        document.getElementById('brushSize').addEventListener('input', (event) => {
+            ctx.lineWidth = event.target.value;
+        });
+
+        document.getElementById('clearCanvas').addEventListener('click', () => {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            history = [];
+        });
+
+        document.getElementById('undoAction').addEventListener('click', undo);
+
+        document.getElementById('saveCanvas').addEventListener('click', () => {
+            const link = document.createElement('a');
+            link.download = 'drawing.png';
+            link.href = canvas.toDataURL();
+            link.click();
+        });
 
         canvas.addEventListener('mousedown', startPosition);
         canvas.addEventListener('mouseup', endPosition);
         canvas.addEventListener('mousemove', (e) => {
-            if (currentShape === 'brush' || currentShape === 'eraser') {
-                draw(e);
-            } else {
-                drawPreview(e);
-            }
-        });
-
-        document.getElementById('colorPicker').addEventListener('input', (e) => {
-            if (currentShape !== 'eraser') {
-                ctx.strokeStyle = e.target.value;
-            }
-        });
-
-        document.getElementById('brushSize').addEventListener('input', (e) => {
-            ctx.lineWidth = e.target.value;
-        });
-
-        document.getElementById('clearCanvas').addEventListener('click', () => {
-            saveState();
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        });
-
-        document.getElementById('saveCanvas').addEventListener('click', () => {
-            const image = canvas.toDataURL('image/png');
-            const link = document.createElement('a');
-            link.href = image;
-            link.download = 'drawing.png';
-            link.click();
-        });
-
-        document.getElementById('undoAction').addEventListener('click', () => {
-            undo();
-        });
-
-        document.getElementById('shapeSelector').addEventListener('change', (e) => {
-            currentShape = e.target.value;
-        });
-
-        document.getElementById('fillShape').addEventListener('change', (e) => {
-            fillShape = e.target.checked;
+            draw(e);
+            drawPreview(e);
         });
     </script>
 </body>
