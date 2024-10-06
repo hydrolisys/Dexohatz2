@@ -9,29 +9,29 @@
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.1/examples/js/loaders/GLTFLoader.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/three@0.126.1/examples/js/controls/OrbitControls.js"></script>
     <style>
-        /* Стили для контейнера, чтобы элементы шли в одну линию */
+
         .flex-container {
             display: flex;
-            justify-content: center;   /* Центрирование по горизонтали */
-            align-items: center;       /* Центрирование по вертикали */
-            gap: 15vh;                 /* Промежуток между элементами */
+            justify-content: center;
+            align-items: center;
+            gap: 15vh;
             max-width: 90%;
         }
         .flex-container2 {
             display: flex;
-            justify-content: center;   /* Центрирование по горизонтали */
-            align-items: center;       /* Центрирование по вертикали */
-            gap: 15vh;                 /* Промежуток между элементами */
+            justify-content: center;
+            align-items: center;
+            gap: 15vh;
         }
 
-    /* Стиль для всплывающего окна */
+
         .tooltip {
           position: relative;
           display: inline-block;
           cursor: pointer;
         }
 
-        /* Стиль текста с определением */
+
         .tooltip .tooltiptext {
           visibility: hidden;
           width: 15vh;
@@ -42,7 +42,7 @@
           padding: 5px;
           position: absolute;
           z-index: 1;
-          top: 125%; /* Смещение вниз */
+          top: 125%;
           left: 50%;
           margin-left: -100px;
           opacity: 0;
@@ -50,7 +50,6 @@
           font-size: 1.5vh;
         }
 
-        /* Показываем текст при наведении */
         .tooltip:hover .tooltiptext {
           visibility: visible;
           opacity: 1;
@@ -59,10 +58,10 @@
 </head>
 <body>
     <video autoplay loop muted class="video-background">
-        <source src="https://videos.pexels.com/video-files/10343918/10343918-hd_1920_1080_24fps.mp4" type="video/mp4"> <!-- Замените на свой URL видео -->
+        <source src="https://videos.pexels.com/video-files/10343918/10343918-hd_1920_1080_24fps.mp4" type="video/mp4">
         Ваш браузер не поддерживает видео.
     </video>
-<!-- Кнопка "На Главную" -->
+
 <button class="home-button" onclick="window.location.href='{{ url_for('index') }}'">To the main page!</button>
 
     <div class="container">
@@ -74,7 +73,7 @@
                         which means that they are not connected to any star. They are also called "extrasolar planets," and "extra-" stresses that they are outside of our solar system.</h3>
                     <h3>Here are some examples of these planets:</h3>
 
-                    <!-- Обертка для двух div с flexbox -->
+
                     <div class="flex-container">
                         <div style="width: 15vh; height: 15vh;" id="page1_1" title="Gilese 876e"></div>
                         <div style="width: 15vh; height: 15vh;" id="page1_2" title="Kepler 22b"></div>
@@ -342,7 +341,7 @@
                     <input type="submit" value="Send">
                 </form>
 
-                <!-- Показать ответ, если он есть -->
+
                 {% if response %}
                 <div class="response">
                     <h2>Answer:</h2>
@@ -368,12 +367,12 @@ let rotatingModels = [];
 let mixers = [];
 const loader = new THREE.GLTFLoader();
 
-// Массив для хранения WH для каждой сцены
+
 const sceneWH = [];
-// Массив для хранения статуса видимости для каждой сцены
+
 const visibilityStatus = [];
 
-// Используем сжатие текстур для оптимизации (пункт 1)
+
 const textureLoader = new THREE.TextureLoader();
 const compressedTexture = textureLoader.load('compressed_texture.ktx2');
 
@@ -396,7 +395,7 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
     const scene = new THREE.Scene();
     const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
     const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.shadowMap.enabled = false; // Отключить тени
+    renderer.shadowMap.enabled = false;
 
     renderer.setClearColor(0x2d0732, 0);
     const container = document.getElementById(containerId);
@@ -408,20 +407,20 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
     let currentScale = modelMas;
     let isRotating = false;
 
-    // Используем LOD для оптимизации полигонов (пункт 2)
+
     const lod = new THREE.LOD();
 
     loader.load(
         modelPath,
         function(gltf) {
             model = gltf.scene;
-            lod.addLevel(model, 0); // Высокая детализация
+            lod.addLevel(model, 0);
             scene.add(lod);
 
             model.position.set(0, 0, 0);
             model.scale.set(modelMas, modelMas, modelMas);
 
-            // Добавляем анимацию
+
             const mixer = new THREE.AnimationMixer(model);
             gltf.animations.forEach((clip) => {
                 mixer.clipAction(clip).play();
@@ -431,13 +430,13 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
         undefined,
         function(error) {
             console.error('Ошибка загрузки модели:', error);
-            loader.dispose(); // Очищаем память, если что-то пошло не так
+            loader.dispose();
         }
     );
 
     camera.position.z = camPos;
 
-    // Оптимизация освещения (пункт 6)
+
     const ambientLight = new THREE.AmbientLight(0xffffff, 1);
     scene.add(ambientLight);
 
@@ -458,11 +457,11 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
     cameras.push(camera);
     controls.push(orbitControls);
 
-    // Сохраняем значение WH для этой сцены
-    sceneWH.push(WH);
-    visibilityStatus.push(false); // Изначально сцена не видима
 
-    // Наблюдаем за видимостью этой сцены
+    sceneWH.push(WH);
+    visibilityStatus.push(false);
+
+
     observeVisibility(containerId, scenes.length - 1);
 
     container.addEventListener('mouseover', () => {
@@ -478,7 +477,7 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
         });
     });
 
-    // Обработка потери контекста (пункт 5)
+
     renderer.domElement.addEventListener('webglcontextlost', function(event) {
         event.preventDefault();
         console.log("WebGL context lost. Attempting to restore...");
@@ -492,7 +491,6 @@ function createScene(containerId, modelPath, modelMas, WH, camPos) {
     return renderer;
 }
 
-// Создаем 3D сцены для каждой страницы с индивидуальным WH
 createScene('page1_1', "{{ url_for('static', filename='gliese_876_e.glb') }}", 0.006, 6, 40);
 createScene('page1_2', "{{ url_for('static', filename='kepler_22_b.glb') }}", 0.006, 6, 40);
 createScene('page1_3', "{{ url_for('static', filename='gliese_581_d.glb') }}", 0.006, 6, 40);
@@ -501,7 +499,7 @@ createScene('page2_1', "{{ url_for('static', filename='earth.glb') }}", 0.08, 5,
 createScene('page2', "{{ url_for('static', filename='solar_system_animation.glb') }}", 0.1, 2, 10);
 createScene('page5_1', "{{ url_for('static', filename='51_pegasi_b.glb') }}", 2, 2.5, 6);
 
-// Ограничение FPS для снижения нагрузки
+
 let lastTime = 0;
 const fps = 60;
 const fpsInterval = 1000 / fps;
@@ -541,10 +539,10 @@ function animate(time) {
 
 animate();
 
-// Обработка изменения размера окна
+
 window.addEventListener('resize', function () {
     scenes.forEach((scene, index) => {
-        const width = window.innerWidth / sceneWH[index]; // Используем соответствующий WH для каждой сцены
+        const width = window.innerWidth / sceneWH[index];
         const height = window.innerHeight / sceneWH[index];
         renderers[index].setSize(width, height);
         cameras[index].aspect = width / height;
@@ -564,7 +562,7 @@ setInterval(function() {
 
       // Открыть боковую панель
         function openSidebar() {
-            document.getElementById("mySidebar").style.width = "400px"; // ширина панели
+            document.getElementById("mySidebar").style.width = "400px";
         }
 
         // Закрыть боковую панель
